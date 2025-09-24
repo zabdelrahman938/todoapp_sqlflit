@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_sqlflit/todo_cubit.dart';
+
+//import 'package:todo_sqlflit/list_tile.dart';
+import 'list_tile.dart';
 
 class NewTask extends StatelessWidget {
-  const NewTask({super.key});
+  const NewTask({super.key, required this.tasks});
+
+  final List<Map>tasks;
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("New Tasks",style: TextStyle(fontSize: 30),));
+
+
+    return BlocConsumer<TodoCubit, TodoState>(
+      listener: (context, state) {
+
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: ShowData(tasks: tasks),
+        );
+      },
+    );
   }
 }

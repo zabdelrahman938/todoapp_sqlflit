@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'list_tile.dart';
+
 
 class DoneTasks extends StatelessWidget {
-   DoneTasks({super.key,required this.tasks});
-  final List<Map> tasks;
+   DoneTasks({super.key});
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ShowDataOnScreen(tasks),
-    );
+    return Center(child: Text("Done Tasks",style: TextStyle(fontSize: 30),));
   }
 }
