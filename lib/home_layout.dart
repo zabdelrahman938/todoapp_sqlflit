@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:todo_sqlflit/todo_cubit.dart';
 
-import 'archive_tasks.dart';
-import 'done_tasks.dart';
-import 'new_task.dart';
+
 
 class HomeLayout extends StatelessWidget {
 
@@ -54,9 +51,11 @@ class HomeLayout extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(onPressed: () {
             if (cubit.isShowBottomSheet == false) {
+
               titlecontroller.clear();
               timecontroller.clear();
               datecontroller.clear();
+
               scaffoldkey.currentState!.showBottomSheet((context) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -141,7 +140,9 @@ class HomeLayout extends StatelessWidget {
                     ),
                   ),
                 );
-              }).
+              },
+
+              ).
               closed.then((value) {
                 cubit.changeBottomSheet(Icon(Icons.edit), false);
 
@@ -158,9 +159,16 @@ class HomeLayout extends StatelessWidget {
                     date: datecontroller.text,
                     time: timecontroller.text);
 
-
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.black,
+                    content: Text("Task added successfully" ,style: TextStyle(color: Colors.white),),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               }
             }
+
           },
               child: cubit.IconFab
           ),

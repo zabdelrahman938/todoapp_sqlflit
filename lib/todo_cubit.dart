@@ -16,11 +16,13 @@ class TodoCubit extends Cubit<TodoState> {
 
   bool isShowBottomSheet = false;
   late Database database;
-   List<Map>list = [];
+   List<Map>newTasks = [];
+  List<Map>doneTasks = [];
+  List<Map>archiveTasks = [];
   int curruntIndex=0;
 
   Icon IconFab = Icon(Icons.edit);
-  List<Widget>  get screens => [NewTask(tasks:list), DoneTasks(), ArchiveTasks()];
+  List<Widget>  get screens => [NewTask(newTasks:newTasks), DoneTasks(doneTasks:doneTasks), ArchiveTasks(archiveTasks:archiveTasks)];
   List<String>title = ["New Task", "Done Task", "Archive task"];
 
   void changeNavBar(int index){
@@ -51,7 +53,8 @@ class TodoCubit extends Cubit<TodoState> {
       onOpen: (db) {
         print("opened database");
         getFromDatabase(db: db).then((value) {
-            list = value;
+            newTasks = value;
+           // emit(CreateDBStates());
           print(value.toString());
           emit(GetDBStates());
         });
@@ -69,26 +72,51 @@ class TodoCubit extends Cubit<TodoState> {
           .then((value) {
         print("inserted success and id is $value");
         getFromDatabase(db: database).then((value) {
-          list = value;
+          newTasks = value;
           print(value.toString());
           emit(GetDBStates());
         });
 
-        /*ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("inserted success and id is $value"),
-              backgroundColor: Colors.black,
-              duration: Duration(seconds: 3),
-            )
-        );*/
       }).catchError((error) {
         print("this error is : $error");
       });
     },);
   }
 
-  Future<List<Map>> getFromDatabase({required db}) async {
-    return list = await db.rawQuery("SELECT * FROM tasks");
+  Future<List<Map>> getFromDatabase({required Database db}) async {
+    newTasks = [];
+    doneTasks = [];
+    archiveTasks = [];
+
+    final value = await db.rawQuery("SELECT * FROM tasks");
+
+    for (var element in value) {
+      if (element['status'] == 'NEW TASK') {
+        newTasks.add(element);
+      } else if (element['status'] == 'done') {
+        doneTasks.add(element);
+      } else {
+        archiveTasks.add(element);
+      }
+    }
+
+    emit(GetDBStates());
+    return newTasks;
+  }
+  void updateDatabase({required String status,required int id})  {
+    database.rawUpdate(
+     'UPDATE tasks SET status = ? WHERE id = ?',
+     ['$status',id],
+   ).then((value){
+     getFromDatabase(db:database);
+    return value;
+   });
+  }
+  void deleteDatabase({required int id})  {
+    database.rawDelete('DELETE FROM tasks WHERE id=?',[id]).
+    then((value){
+      getFromDatabase(db:database);
+    });
   }
 
 

@@ -6,9 +6,9 @@ import 'package:todo_sqlflit/todo_cubit.dart';
 import 'list_tile.dart';
 
 class NewTask extends StatelessWidget {
-  const NewTask({super.key, required this.tasks});
+  const NewTask({super.key, required this.newTasks});
 
-  final List<Map>tasks;
+  final List<Map>newTasks;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class NewTask extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          body: ShowData(tasks: tasks),
+          body: ShowData(newTasks: newTasks),
         );
       },
     );
